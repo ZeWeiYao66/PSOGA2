@@ -25,24 +25,24 @@ class Psoga:
         print('initialize time: ', end_time1 - start_time1)
         # Step2：进行种群的迭代
         start_time2 = time.process_time()
+        cloudlets = self.population.cloudlets.cloudlets
+        K = self.population.cloudlets.K
+        size = self.population.size
         for n in range(1, gen + 1):
             # Step3：对每个粒子的速度、位置进行更新，并进行变异操作
             self.population.w = self.Wmax - n * (self.Wmax - self.Wmin) / gen
             # self.population.w = self.Wmax - 0.8 * (self.Wmax - self.Wmin) * (np.log(n) / np.log(gen))
-            for index in range(self.population.size):
+            for index in range(size):
                 # 1).粒子群速度、位置的更新
                 self.population.update_position(index)
                 # 2).进行变异操作(需要检查变异的粒子是否符合要求)
                 if np.random.rand() < self.mutation.rate:
                     # 获取参数
                     solution = self.population.individuals[index].solution
-                    cloudlets = self.population.cloudlets.cloudlets
                     # 进行变异操作
-                    self.mutation.mutate(self.population.individuals[index].solution,
-                                         self.population.cloudlets.K, self.population.cloudlets.cloudlets)
+                    self.mutation.mutate(solution, K, cloudlets)
                     # 检查变异之后的粒子是否满足限制要求
-                    self.population.individuals[index].solution = CheckSolution(solution, self.population.cloudlets.K,
-                                                                                cloudlets)
+                    self.population.individuals[index].solution = CheckSolution(solution, K, cloudlets)
             # 3).更新个体极值(全部粒子的速度和位置更新完之后再去计算)
             self.population.update_pbest()
             # 4).更新全局极值

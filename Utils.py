@@ -61,8 +61,9 @@ def CheckSolution(solution, K, cloudlets):
             if new_solution[i][row_max_index] >= cloudlets[i].arrivalRate / 2:
                 new_solution[i][row_max_index] = new_solution[i][row_max_index] / 2
             new_solution[i][row_max_index] -= np.random.rand()
-            if new_solution[i][row_max_index] < 0:
-                new_solution[i][row_max_index] = 0
+            # if new_solution[i][row_max_index] < 0:
+            #     new_solution[i][row_max_index] = 0
+    new_solution = np.maximum(new_solution, 0)
     # 接下来对解的每列进行检查，防止每列值之和超过不过载微云j的总任务接受率(⭐⭐⭐要考虑不过载微云本身的任务到达率)
     for j in range(K):
         arg = cloudlets[j].serverNum * cloudlets[j].serverRate - cloudlets[j].arrivalRate
@@ -70,8 +71,9 @@ def CheckSolution(solution, K, cloudlets):
             col = new_solution[:, j]
             col_max_index = np.argmax(col)  # 获取该列中的最大值下标
             new_solution[col_max_index][j] -= np.random.rand()
-            if new_solution[col_max_index][j] < 0:
-                new_solution[col_max_index][j] = 0
+            # if new_solution[col_max_index][j] < 0:
+            #     new_solution[col_max_index][j] = 0
+    new_solution = np.maximum(new_solution, 0)
     return np.round(new_solution, decimals=5)
 
 
