@@ -74,6 +74,8 @@ def CheckSolution(solution, K, cloudlets):
             # if new_solution[col_max_index][j] < 0:
             #     new_solution[col_max_index][j] = 0
     new_solution = np.maximum(new_solution, 0)
+    for i in range(K):
+        new_solution[i][i] = 0
     return np.round(new_solution, decimals=5)
 
 
